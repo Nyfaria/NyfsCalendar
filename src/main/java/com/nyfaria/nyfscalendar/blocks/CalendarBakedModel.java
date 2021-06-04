@@ -6,10 +6,7 @@ import com.nyfaria.nyfscalendar.NyfsCalendar;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -19,8 +16,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
@@ -29,10 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -395,6 +388,8 @@ public class CalendarBakedModel implements IDynamicBakedModel {
         List<BakedQuad> quads = new ArrayList<>();
         double l = 0;
         double r = 1;
+        double s = 0.125;
+        
 		quads.add(createQuad(v(0, 1, 0), v(0, 1, 0.125), v(1, 1, 0.125), v(1, 1, 0), texture1,0));
 		quads.add(createQuad(v(0, 0, 0), v(1, 0, 0), v(1, 0, 0.125), v(0, 0, 0.125), texture1,0));
 		quads.add(createQuad(v(1, 1, 0.125), v(1, 0, 0.125), v(1, 0, 0), v(1, 1, 0), texture1,0));
