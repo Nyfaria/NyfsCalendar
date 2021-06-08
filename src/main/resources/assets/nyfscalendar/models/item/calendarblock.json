@@ -1,3 +1,6 @@
 {
-  "loader": "nyfscalendar:calendarloader"
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "nyfscalendar:block/calendarblock"
+		}
 }

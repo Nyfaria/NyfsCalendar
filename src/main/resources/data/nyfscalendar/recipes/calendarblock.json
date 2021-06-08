@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "LLL",
+        "L#L",
+        "LLL"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:clock"
+        },
+        "L": {
+            "item": "minecraft:paper"
+        }
+    },
+    "result": {
+        "item": "nyfscalendar:calendarblock",
+        "count": 1
+    },
+    "group": "tools"
+}

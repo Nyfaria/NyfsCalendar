@@ -12,8 +12,10 @@ import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -316,7 +318,7 @@ public class CalendarBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean usesBlockLight() {
+    public boolean usesBlockLight(){
         return false;
     }
 
@@ -326,6 +328,7 @@ public class CalendarBakedModel implements IDynamicBakedModel {
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
         for (int j = 0 ; j < elements.size() ; j++) {
             VertexFormatElement e = elements.get(j);
+            normal.zRot(90);
             switch (e.getUsage()) {
                 case POSITION:
                     builder.put(j, (float) x, (float) y, (float) z, 1.0f);
@@ -362,7 +365,7 @@ public class CalendarBakedModel implements IDynamicBakedModel {
         Vector3d normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
         int tw = 16;//sprite.getWidth();
         int th = 16;//sprite.getHeight();
-
+        
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getNearest(normal.x, normal.y, normal.z));
         putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f*cm, 1.0f*cm, 1.0f*cm);
@@ -381,35 +384,132 @@ public class CalendarBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
     	LocalDate currentDate = boop.plusDays(Objects.isNull(Minecraft.getInstance().level) ? 1 : Minecraft.getInstance().level.getDayTime() / 24000L % 2147483647L);
-        int DIW = currentDate.with(TemporalAdjusters.firstDayOfMonth()).getDayOfWeek().getValue();
-    	TextureAtlasSprite texture1 = getDOWDIMTexture(DIW,currentDate.lengthOfMonth());
-        TextureAtlasSprite texture2 = getMonthTexture(currentDate.getMonthValue());
-        TextureAtlasSprite texture3 = getSlotTexture(currentDate.getDayOfMonth() + DIW - 2);
+        int DIW = currentDate.with(TemporalAdjusters.firstDayOfMonth()).getDayOfWeek().getValue() + 1;
+        DIW = DIW  > 7 ? 1 : DIW;
+    	List<TextureAtlasSprite> texture = new ArrayList<TextureAtlasSprite>();
+    	
+    	texture.add(getDOWDIMTexture(DIW,currentDate.lengthOfMonth()));
+    	texture.add(getMonthTexture(currentDate.getMonthValue()));
+    	texture.add(getSlotTexture(currentDate.getDayOfMonth() + DIW - 2));
         List<BakedQuad> quads = new ArrayList<>();
-        double l = 0;
-        double r = 1;
-        double s = 0.125;
-        
-		quads.add(createQuad(v(0, 1, 0), v(0, 1, 0.125), v(1, 1, 0.125), v(1, 1, 0), texture1,0));
-		quads.add(createQuad(v(0, 0, 0), v(1, 0, 0), v(1, 0, 0.125), v(0, 0, 0.125), texture1,0));
-		quads.add(createQuad(v(1, 1, 0.125), v(1, 0, 0.125), v(1, 0, 0), v(1, 1, 0), texture1,0));
-		quads.add(createQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 0.125), v(0, 1, 0.125), texture1,0));
-		quads.add(createQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), texture1,1));
-		quads.add(createQuad(v(0, 1, 0.125), v(0, 0, 0.125), v(1, 0, 0.125), v(1, 1, 0.125), texture1,1));
 
-		quads.add(createQuad(v(0, 1, 0), v(0, 1, 0.125), v(1, 1, 0.125), v(1, 1, 0), texture2,0));
-		quads.add(createQuad(v(0, 0, 0), v(1, 0, 0), v(1, 0, 0.125), v(0, 0, 0.125), texture2,0));
-		quads.add(createQuad(v(1, 1, 0.125), v(1, 0, 0.125), v(1, 0, 0), v(1, 1, 0), texture2,0));
-		quads.add(createQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 0.125), v(0, 1, 0.125), texture2,0));
-		quads.add(createQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), texture2,1));
-		quads.add(createQuad(v(0, 1, 0.125), v(0, 0, 0.125), v(1, 0, 0.125), v(1, 1, 0.125), texture2,1));
+        Direction dirdirdir = Direction.NORTH;
+        int dirdir = 1;
+        if(state != null) {
+        	dirdirdir = state.getValue(BlockStateProperties.FACING);
+        	dirdir = state.getValue(BlockStateProperties.ROTATION_16);
+        }
 
-		quads.add(createQuad(v(0, 1, 0), v(0, 1, 0.125), v(1, 1, 0.125), v(1, 1, 0), texture3,0));
-		quads.add(createQuad(v(0, 0, 0), v(1, 0, 0), v(1, 0, 0.125), v(0, 0, 0.125), texture3,0));
-		quads.add(createQuad(v(1, 1, 0.125), v(1, 0, 0.125), v(1, 0, 0), v(1, 1, 0), texture3,0));
-		quads.add(createQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 0.125), v(0, 1, 0.125), texture3,0));
-		quads.add(createQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), texture3,1));
-		quads.add(createQuad(v(0, 1, 0.125), v(0, 0, 0.125), v(1, 0, 0.125), v(1, 1, 0.125), texture3,1));
+        for(TextureAtlasSprite theTexture : texture) {
+            if(dirdirdir == Direction.SOUTH) {
+            	quads.add(createQuad(v(0, 1, 0.875), v(0, 1, 1), v(1, 1, 1), v(1, 1, 0.875), theTexture,0));
+            	quads.add(createQuad(v(0, 0, 0.875), v(1, 0, 0.875), v(1, 0, 1), v(0, 0, 1), theTexture,0));
+            	
+            	quads.add(createQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 0.875), v(1, 1, 0.875), theTexture,0));            	
+            	quads.add(createQuad(v(0, 1, 0.875), v(0, 0, 0.875), v(0, 0, 1), v(0, 1, 1), theTexture,0));
+            	
+            	quads.add(createQuad(v(1, 1, 0.875), v(1, 0, 0.875), v(0, 0, 0.875), v(0, 1, 0.875), theTexture,1));
+            	quads.add(createQuad(v(0, 1, 1), v(0, 0, 1), v(1, 0, 1), v(1, 1, 1), theTexture,1));
+            }
+            else if(dirdirdir == Direction.UP) {
+            	switch(dirdir) {
+            	case 0:{
+            		quads.add(createQuad(v(0, 1, 0), v(0, 1, 1), v(1, 1, 1), v(1, 1, 0), theTexture,1));
+                    quads.add(createQuad(v(1, 0.875, 0), v(1, 0.875, 1), v(0, 0.875, 1), v(0, 0.875, 0), theTexture,1));
+                    break;
+            	}
+            	case 12:{
+            		quads.add(createQuad(v(0, 1, 1), v(1, 1, 1), v(1, 1, 0), v(0, 1, 0), theTexture,1));
+                    quads.add(createQuad(v(0,0.875, 0), v(1,0.875, 0), v(1,0.875, 1), v(0,0.875, 1), theTexture,1));
+                    break;
+            	}
+            	case 8:{
+            		quads.add(createQuad(v(1, 1, 1), v(1, 1, 0), v(0, 1, 0), v(0, 1, 1), theTexture,1));
+                    quads.add(createQuad(v(0,0.875, 1), v(0,0.875, 0), v(1,0.875, 0), v(1,0.875, 1), theTexture,1));
+                    break;
+            	}
+            	case 4:{
+            		quads.add(createQuad(v(1, 1, 0), v(0, 1, 0), v(0, 1, 1), v(1, 1, 1), theTexture,1));
+                    quads.add(createQuad(v(1,0.875, 1), v(0,0.875, 1), v(0,0.875, 0), v(1,0.875, 0), theTexture,1));
+                    break;
+            	}
+            	default:{
+            		quads.add(createQuad(v(0, 1, 0), v(0, 1, 1), v(1, 1, 1), v(1, 1, 0), theTexture,1));
+                    quads.add(createQuad(v(1,0.875, 0), v(1,0.875, 1), v(0,0.875, 1), v(0,0.875, 0), theTexture,1));
+                    break;
+            	}
+            		
+            	}
+                
+                quads.add(createQuad(v(1, 1, 1), v(1, 0.875, 1), v(1, 0.875, 0), v(1, 1, 0), theTexture,0));
+                quads.add(createQuad(v(0, 1, 0), v(0, 0.875, 0), v(0, 0.875, 1), v(0, 1, 1), theTexture,0));
+                
+                quads.add(createQuad(v(1, 1, 0), v(1, 0.875, 0), v(0, 0.875, 0), v(0, 1, 0), theTexture,0));
+                quads.add(createQuad(v(0, 1, 1), v(0, 0.875, 1), v(1, 0.875, 1), v(1, 1, 1), theTexture,0));
+            }
+            else if(dirdirdir == Direction.DOWN) {
+	            
+            	switch(dirdir) {
+            	case 0:{
+            		quads.add(createQuad(v(0, 0.125, 0), v(0, 0.125, 1), v(1, 0.125, 1), v(1, 0.125, 0), theTexture,1));
+                    quads.add(createQuad(v(1, 0, 0), v(1, 0, 1), v(0, 0, 1), v(0, 0, 0), theTexture,1));
+                    break;
+            	}
+            	case 12:{
+            		quads.add(createQuad(v(0, 0.125, 1), v(1, 0.125, 1), v(1, 0.125, 0), v(0, 0.125, 0), theTexture,1));
+                    quads.add(createQuad(v(0, 0, 0), v(1, 0, 0), v(1, 0, 1), v(0, 0, 1), theTexture,1));
+                    break;
+            	}
+            	case 8:{
+            		quads.add(createQuad(v(1, 0.125, 1), v(1, 0.125, 0), v(0, 0.125, 0), v(0, 0.125, 1), theTexture,1));
+                    quads.add(createQuad(v(0, 0, 1), v(0, 0, 0), v(1, 0, 0), v(1, 0, 1), theTexture,1));
+                    break;
+            	}
+            	case 4:{
+            		quads.add(createQuad(v(1, 0.125, 0), v(0, 0.125, 0), v(0, 0.125, 1), v(1, 0.125, 1), theTexture,1));
+                    quads.add(createQuad(v(1, 0, 1), v(0, 0, 1), v(0, 0, 0), v(1, 0, 0), theTexture,1));
+                    break;
+            	}
+            	default:{
+            		quads.add(createQuad(v(0, 0.125, 0), v(0, 0.125, 1), v(1, 0.125, 1), v(1, 0.125, 0), theTexture,1));
+                    quads.add(createQuad(v(1, 0, 0), v(1, 0, 1), v(0, 0, 1), v(0, 0, 0), theTexture,1));
+                    break;
+            	}
+            		
+            	}
+            	
+                quads.add(createQuad(v(1, 0.125, 1), v(1, 0, 1), v(1, 0, 0), v(1, 0.125, 0), theTexture,0));
+                quads.add(createQuad(v(0, 0.125, 0), v(0, 0, 0), v(0, 0, 1), v(0, 0.125, 1), theTexture,0));
+                
+                quads.add(createQuad(v(1, 0.125, 0), v(1, 0, 0), v(0, 0, 0), v(0, 0.125, 0), theTexture,0));
+                quads.add(createQuad(v(0, 0.125, 1), v(0, 0, 1), v(1, 0, 1), v(1, 0.125, 1), theTexture,0));
+                
+            }
+            else if(dirdirdir == Direction.EAST) {
+                quads.add(createQuad(v(0.875, 1, 0), v(0.875, 1, 1), v(1, 1, 1), v(1, 1, 0), theTexture,0));
+                quads.add(createQuad(v(0.875, 0, 0), v(1, 0, 0), v(1, 0, 1), v(0.875, 0, 1), theTexture,0));
+                quads.add(createQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 0), v(1, 1, 0), theTexture,1));
+                quads.add(createQuad(v(0.875, 1, 0), v(0.875, 0, 0), v(0.875, 0, 1), v(0.875, 1, 1), theTexture,1));
+                quads.add(createQuad(v(1, 1, 0), v(1, 0, 0), v(0.875, 0, 0), v(0.875, 1, 0), theTexture,0));
+                quads.add(createQuad(v(0.875, 1, 1), v(0.875, 0, 1), v(1, 0, 1), v(1, 1, 1), theTexture,0));
+            }
+            else if(dirdirdir == Direction.WEST) {
+                quads.add(createQuad(v(0, 1, 0), v(0, 1, 1), v(0.125, 1, 1), v(0.125, 1, 0), theTexture,0));
+                quads.add(createQuad(v(0, 0, 0), v(0.125, 0, 0), v(0.125, 0, 1), v(0, 0, 1), theTexture,0));
+                quads.add(createQuad(v(0.125, 1, 1), v(0.125, 0, 1), v(0.125, 0, 0), v(0.125, 1, 0), theTexture,1));
+                quads.add(createQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 1), v(0, 1, 1), theTexture,1));
+                quads.add(createQuad(v(0.125, 1, 0), v(0.125, 0, 0), v(0, 0, 0), v(0, 1, 0), theTexture,0));
+                quads.add(createQuad(v(0, 1, 1), v(0, 0, 1), v(0.125, 0, 1), v(0.125, 1, 1), theTexture,0));
+            }
+            else {
+            	quads.add(createQuad(v(0, 1, 0), v(0, 1, 0.125), v(1, 1, 0.125), v(1, 1, 0), theTexture,0));
+            	quads.add(createQuad(v(0, 0, 0), v(1, 0, 0), v(1, 0, 0.125), v(0, 0, 0.125), theTexture,0));
+            	quads.add(createQuad(v(1, 1, 0.125), v(1, 0, 0.125), v(1, 0, 0), v(1, 1, 0), theTexture,0));
+            	quads.add(createQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 0.125), v(0, 1, 0.125), theTexture,0));
+            	quads.add(createQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), theTexture,1));
+            	quads.add(createQuad(v(0, 1, 0.125), v(0, 0, 0.125), v(1, 0, 0.125), v(1, 1, 0.125), theTexture,1));
+            }
+        }
 
         return quads;
     }

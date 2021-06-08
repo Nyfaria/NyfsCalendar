@@ -1,5 +1,7 @@
 package com.nyfaria.nyfscalendar;
 
+import javax.swing.text.TabableView;
+
 import com.nyfaria.nyfscalendar.blocks.CalendarBlock;
 import com.nyfaria.nyfscalendar.blocks.CalendarBlockTile;
 
@@ -9,6 +11,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +36,7 @@ public class Registration {
         TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
     public static final RegistryObject<CalendarBlock> CALENDARBLOCK = BLOCKS.register("calendarblock", CalendarBlock::new);
-    public static final RegistryObject<Item> CALENDARBLOCK_ITEM = ITEMS.register("calendarblock", () -> new BlockItem(CALENDARBLOCK.get(), new Item.Properties().tab(ModSetup.ITEM_GROUP)));
+    public static final RegistryObject<Item> CALENDARBLOCK_ITEM = ITEMS.register("calendarblock", () -> new BlockItem(CALENDARBLOCK.get(), new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)));
     public static final RegistryObject<TileEntityType<CalendarBlockTile>> CALENDARBLOCK_TILE = TILES.register("calendarblock", () -> TileEntityType.Builder.of(CalendarBlockTile::new, CALENDARBLOCK.get()).build(null));
 
 }
