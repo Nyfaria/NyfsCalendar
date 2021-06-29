@@ -1,16 +1,14 @@
 package com.nyfaria.nyfscalendar.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -22,23 +20,20 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.extensions.IForgeBlock;
 import javax.annotation.Nullable;
 
-import com.nyfaria.nyfscalendar.NCConfig;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class CalendarBlock extends Block implements IForgeBlock, IWaterLoggable {
+public class CalendarBlock2 extends Block {
 
-	private static VoxelShape SHAPE = VoxelShapes.box(0, 0, 0, 1, 1, 0.125);
-	public CalendarBlock() {
+	private static VoxelShape SHAPE = VoxelShapes.empty();
+	public CalendarBlock2() {
 		super(Properties.of(Material.WOOL)
 				.sound(SoundType.WOOL).dynamicShape()
         		);
-        this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.FACING, Direction.NORTH));
 
 
 	}
@@ -54,7 +49,7 @@ public class CalendarBlock extends Block implements IForgeBlock, IWaterLoggable 
     	list.add(new StringTextComponent(fm.format(boop)));
     }
 
-
+/*
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
         TileEntity te = reader.getBlockEntity(pos);
@@ -84,7 +79,7 @@ public class CalendarBlock extends Block implements IForgeBlock, IWaterLoggable 
         
         return SHAPE;
     }
-
+*/
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
@@ -94,7 +89,7 @@ public class CalendarBlock extends Block implements IForgeBlock, IWaterLoggable 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     	
-        return new CalendarBlockTile();
+        return new CalendarBlock2Tile();
     }
     @Nullable
     @Override
@@ -126,6 +121,14 @@ public class CalendarBlock extends Block implements IForgeBlock, IWaterLoggable 
     @Override
     public int getHarvestLevel(BlockState state) {
       return 1; //TODO: RE-Evaluate
+    }
+    @Override
+    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return SHAPE;
+    }
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.INVISIBLE;
     }
     
 }

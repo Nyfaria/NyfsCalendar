@@ -22,7 +22,7 @@ public class ModSetup {
 	public static void turnOffSeasonProg(FMLServerStartingEvent e)
 	{
 
-		if( ModList.get().isLoaded("sereneseasons")) {		
+		if( ModList.get().isLoaded("sereneseasons") && NCConfig.INSTANCE.doSS.get() == true) {		
 			e.getServer().getGameRules().getRule(SSGameRules.RULE_DOSEASONCYCLE).set(false, e.getServer());
 		}
 	}
@@ -30,7 +30,7 @@ public class ModSetup {
 	public static LocalDate day = LocalDate.of(2012, 1, 1);
 	@SubscribeEvent
 	public static void UpdateSeason(WorldTickEvent e) {
-		if( ModList.get().isLoaded("sereneseasons")) {			
+		if( ModList.get().isLoaded("sereneseasons") && NCConfig.INSTANCE.doSS.get() == true) {			
 			if(!e.world.getGameRules().getBoolean(SSGameRules.RULE_DOSEASONCYCLE)){
 			LocalDate dayNow = LocalDate.of(2012,1,1).plusDays(e.world.getDayTime() / 24000L % 2147483647L);
 	

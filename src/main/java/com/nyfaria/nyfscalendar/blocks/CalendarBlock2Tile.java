@@ -9,30 +9,25 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import javax.annotation.Nullable;
 
-import static com.nyfaria.nyfscalendar.Registration.CALENDARBLOCK_TILE;
-
-public class CalendarBlockTile extends TileEntity implements ITickableTileEntity {
+import com.nyfaria.nyfscalendar.Registration;
 
 
+public class CalendarBlock2Tile extends TileEntity implements ITickableTileEntity {
 
-    public CalendarBlockTile() {
-        super(CALENDARBLOCK_TILE.get());
+
+
+    public CalendarBlock2Tile() {
+        super(Registration.CALENDARBLOCK2_TILE.get());
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-
-        load(state, tag);
+    public AxisAlignedBB getRenderBoundingBox() {
+        return new AxisAlignedBB(getBlockPos(), getBlockPos().offset(1, 3, 1));
     }
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(worldPosition, 1, getUpdateTag());
-    }
-
 
 	public static long boop = 0;
 	@Override

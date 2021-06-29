@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "nyfscalendar:block/calendarblock2",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "nyfscalendar:block/calendarblock2",
+      "x": -90
+    },
+    "facing=north": {	
+    	"model": "nyfscalendar:block/calendarblock2"
+    },
+    "facing=south": {
+      "model": "nyfscalendar:block/calendarblock2",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "nyfscalendar:block/calendarblock2",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "nyfscalendar:block/calendarblock2",
+      "y": 90
+    }
+  }
+}

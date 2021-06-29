@@ -23,12 +23,16 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+import com.nyfaria.nyfscalendar.blocks.CalendarBlock2Renderer;;
+
+
 
 @Mod.EventBusSubscriber(modid = NyfsCalendar.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
     public static void init(final FMLClientSetupEvent event) {
-
+    	
+    	CalendarBlock2Renderer.register();
         event.enqueueWork(() -> {
             RenderTypeLookup.setRenderLayer(Registration.CALENDARBLOCK.get(), (RenderType) -> true);
             Minecraft.getInstance().getBlockColors().register(new CalendarBlockColor(), Registration.CALENDARBLOCK.get());
@@ -46,7 +50,11 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
+        if (!event.getMap().location().equals(AtlasTexture.LOCATION_BLOCKS)) {
+            return;
+        }
 
+        event.addSprite(CalendarBlock2Renderer.CALENDARBLOCK2_TEXTURE);
     }
 
     @SubscribeEvent
@@ -56,4 +64,5 @@ public class ClientSetup {
             event.setMaxWidth(200);
         }
     }
+    
 }

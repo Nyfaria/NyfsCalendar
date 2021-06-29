@@ -106,8 +106,7 @@ public class CalendarModelGeometry implements IModelGeometry<CalendarModelGeomet
     	list.add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, CalendarBakedModel.TEXTURE_SLOT_37));
     	list.add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, CalendarBakedModel.TEXTURE_SLOT_38));
     	list.add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, CalendarBakedModel.TEXTURE_SLOT_39));
-    	list.add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, CalendarBakedModel.TEXTURE_SLOT_40));
-    	list.add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, CalendarBakedModel.TEXTURE_SLOT_41));
+    	list.add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, CalendarBakedModel.LETTERS_NUMBERS));
     	
     	return Collections.synchronizedList(list);
         }

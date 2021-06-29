@@ -2,6 +2,7 @@ package com.nyfaria.nyfscalendar.blocks;
 
 
 import com.google.common.collect.ImmutableList;
+import com.nyfaria.nyfscalendar.NCConfig;
 import com.nyfaria.nyfscalendar.NyfsCalendar;
 
 import net.minecraft.block.BlockState;
@@ -15,7 +16,6 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -35,7 +35,12 @@ import java.util.Random;
 public class CalendarBakedModel implements IDynamicBakedModel {
 
 	public static World world = Minecraft.getInstance().level;
-	public static final LocalDate boop = LocalDate.of(2012,1,1);
+	public static int year = NCConfig.INSTANCE.startYear.get();
+	public static int month = NCConfig.INSTANCE.startMonth.get();
+	public static int day = NCConfig.INSTANCE.startDay.get();
+	public static final LocalDate serverStartDate = LocalDate.of(year,month,day);
+	
+	public static final ResourceLocation LETTERS_NUMBERS = new ResourceLocation ("minecraft","font/ascii"); 
 	
     public static final ResourceLocation TEXTURE_DOWDIM_1_31 = new ResourceLocation(NyfsCalendar.MOD_ID, "block/weekday1days31");
     public static final ResourceLocation TEXTURE_DOWDIM_2_31 = new ResourceLocation(NyfsCalendar.MOD_ID, "block/weekday2days31");
@@ -316,6 +321,13 @@ public class CalendarBakedModel implements IDynamicBakedModel {
     	}
     	return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(TEXTURE_SLOT_41);
     }
+    private TextureAtlasSprite getWordTexture(char which) {
+    	switch(which) {
+    	case 'A':
+    	break;
+    	}
+    	return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(LETTERS_NUMBERS);
+    }
 
     @Override
     public boolean usesBlockLight(){
@@ -372,6 +384,7 @@ public class CalendarBakedModel implements IDynamicBakedModel {
         putVertex(builder, normal, v2.x, v2.y, v2.z, 0, th, sprite, 1.0f*cm, 1.0f*cm, 1.0f*cm);
         putVertex(builder, normal, v3.x, v3.y, v3.z, tw, th, sprite, 1.0f*cm, 1.0f*cm, 1.0f*cm);
         putVertex(builder, normal, v4.x, v4.y, v4.z, tw, 0, sprite, 1.0f*cm, 1.0f*cm, 1.0f*cm);
+        
         return builder.build();
     }
 
@@ -383,7 +396,7 @@ public class CalendarBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-    	LocalDate currentDate = boop.plusDays(Objects.isNull(Minecraft.getInstance().level) ? 1 : Minecraft.getInstance().level.getDayTime() / 24000L % 2147483647L);
+    	LocalDate currentDate = serverStartDate.plusDays(Objects.isNull(Minecraft.getInstance().level) ? 1 : Minecraft.getInstance().level.getDayTime() / 24000L % 2147483647L);
         int DIW = currentDate.with(TemporalAdjusters.firstDayOfMonth()).getDayOfWeek().getValue() + 1;
         DIW = DIW  > 7 ? 1 : DIW;
     	List<TextureAtlasSprite> texture = new ArrayList<TextureAtlasSprite>();
@@ -391,6 +404,7 @@ public class CalendarBakedModel implements IDynamicBakedModel {
     	texture.add(getDOWDIMTexture(DIW,currentDate.lengthOfMonth()));
     	texture.add(getMonthTexture(currentDate.getMonthValue()));
     	texture.add(getSlotTexture(currentDate.getDayOfMonth() + DIW - 2));
+    	texture.add(getWordTexture('A'));
         List<BakedQuad> quads = new ArrayList<>();
 
         Direction dirdirdir = Direction.NORTH;
