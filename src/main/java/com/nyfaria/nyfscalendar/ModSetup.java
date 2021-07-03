@@ -27,12 +27,12 @@ public class ModSetup {
 		}
 	}
 	
-	public static LocalDate day = LocalDate.of(2012, 1, 1);
+	public static LocalDate day = LocalDate.of(NCConfig.INSTANCE.startYear.get(), NCConfig.INSTANCE.startMonth.get(), NCConfig.INSTANCE.startDay.get());
 	@SubscribeEvent
 	public static void UpdateSeason(WorldTickEvent e) {
 		if( ModList.get().isLoaded("sereneseasons") && NCConfig.INSTANCE.doSS.get() == true) {			
 			if(!e.world.getGameRules().getBoolean(SSGameRules.RULE_DOSEASONCYCLE)){
-			LocalDate dayNow = LocalDate.of(2012,1,1).plusDays(e.world.getDayTime() / 24000L % 2147483647L);
+			LocalDate dayNow = LocalDate.of(NCConfig.INSTANCE.startYear.get(),NCConfig.INSTANCE.startMonth.get(),NCConfig.INSTANCE.startDay.get()).plusDays(e.world.getDayTime() / 24000L % 2147483647L);
 	
 			
 				if(day!=dayNow) {

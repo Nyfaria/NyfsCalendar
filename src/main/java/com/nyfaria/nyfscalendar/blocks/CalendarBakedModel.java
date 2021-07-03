@@ -411,7 +411,7 @@ public class CalendarBakedModel implements IDynamicBakedModel {
         int dirdir = 1;
         if(state != null) {
         	dirdirdir = state.getValue(BlockStateProperties.FACING);
-        	dirdir = state.getValue(BlockStateProperties.ROTATION_16);
+        	dirdir = state.getValue(BlockStateProperties.ROTATION_16); //1 800 827 1000
         }
 
         for(TextureAtlasSprite theTexture : texture) {
