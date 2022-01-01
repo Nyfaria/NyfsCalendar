@@ -1,8 +1,0 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "nyfscalendar:item/weekday1days31",
-		"layer1": "nyfscalendar:item/month1",
-		"layer2": "nyfscalendar:item/slot0"
-	}
-}

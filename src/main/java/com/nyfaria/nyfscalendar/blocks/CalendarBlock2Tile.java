@@ -1,28 +1,21 @@
 package com.nyfaria.nyfscalendar.blocks;
 
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.entity.EntityType;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
-
-import javax.annotation.Nullable;
 
 import com.nyfaria.nyfscalendar.Registration;
 
 
 public class CalendarBlock2Tile extends TileEntity implements ITickableTileEntity {
 
-
-
     public CalendarBlock2Tile() {
-        super(Registration.CALENDARBLOCK2_TILE.get());
+        super(Registration.CALENDAR_RED2.get());
     }
+
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
@@ -36,8 +29,8 @@ public class CalendarBlock2Tile extends TileEntity implements ITickableTileEntit
 
 		if(boop % 20 == 0) {
 
-			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-			setChanged();
+			//level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+			//setChanged();
 		}
 		boop++;
 		

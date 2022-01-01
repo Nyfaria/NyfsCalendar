@@ -1,0 +1,57 @@
+{
+  "variants": {
+    "facing=down,rotation=0": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": 90
+    },
+    "facing=down,rotation=4": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,rotation=8": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": 90,
+      "y": 180
+    },
+    "facing=down,rotation=12": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": 90,
+      "y": 270
+    },
+    "facing=up,rotation=0": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": -90
+    },
+    "facing=up,rotation=4": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": -90,
+      "y": 90
+    },
+    "facing=up,rotation=8": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": -90,
+      "y": 180
+    },
+    "facing=up,rotation=12": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "x": -90,
+      "y": 270
+    },
+    "facing=north": {
+      "model": "nyfscalendar:block/calendar_orange"
+    },
+    "facing=south": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "nyfscalendar:block/calendar_orange",
+      "y": 90
+    }
+  }
+}

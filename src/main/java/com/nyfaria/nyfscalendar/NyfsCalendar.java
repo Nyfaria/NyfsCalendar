@@ -23,7 +23,7 @@ public class NyfsCalendar {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 
 			FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::init);
-
+			NyfDate nyfDate = new NyfDate();
 		}
 	}
 

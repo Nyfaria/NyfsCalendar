@@ -1,5 +1,7 @@
 package com.nyfaria.nyfscalendar.blocks;
 
+import com.nyfaria.nyfscalendar.NyfDate;
+import com.nyfaria.nyfscalendar.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -17,9 +19,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+
 import javax.annotation.Nullable;
 
 
@@ -41,15 +47,61 @@ public class CalendarBlock2 extends Block {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable IBlockReader reader, List<ITextComponent> list, ITooltipFlag flags) {
     	DateTimeFormatter fm = DateTimeFormatter.ofPattern("EEEE, LLLL dd");
-    	LocalDate boop = LocalDate.of(2012,1,1);
+    	LocalDate localDate = LocalDate.of(2012,1,1);
     	if(reader instanceof ClientWorld) {
     		long day = ((ClientWorld)reader).getDayTime() / 24000L % 2147483647L;
-    		boop = boop.plusDays(day);
+            localDate = localDate.plusDays(day);
     	}
-    	list.add(new StringTextComponent(fm.format(boop)));
+    	list.add(new StringTextComponent(fm.format(localDate)));
     }
 
-/*
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+
+        return new CalendarBlock2Tile();
+
+    }
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    	int direction = 0;
+    	switch(context.getHorizontalDirection()) {
+    	case NORTH:
+    		break;
+    	case SOUTH:
+    		direction = 8;
+    		break;
+    	case WEST:
+    		direction = 12;
+    		break;
+    	case EAST:
+    		direction = 4;
+    		break;
+    	}
+    	if(context.getLevel().isClientSide) {
+            NyfDate nyfDate = new NyfDate();
+            System.out.println("Server Age = " + nyfDate.serverAge());
+            System.out.println(nyfDate.getWeekdayDisplayName());
+            System.out.println("Starting Date = " + nyfDate.displayDate());
+            System.out.println("The first day of the Month = " + nyfDate.getFirstDayOfMonth());
+        }
+         return defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection()).setValue(BlockStateProperties.ROTATION_16, direction);
+         }
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.FACING);
+        builder.add(BlockStateProperties.ROTATION_16);
+    }
+    @Override
+    public int getHarvestLevel(BlockState state) {
+      return 1;
+    }
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
         TileEntity te = reader.getBlockEntity(pos);
@@ -61,8 +113,7 @@ public class CalendarBlock2 extends Block {
         if(state.getValue(BlockStateProperties.FACING) == Direction.UP) {
         	SHAPE = VoxelShapes.box(0, 0.875, 0, 1, 1, 1);
         }
-        
-        
+
         if(state.getValue(BlockStateProperties.FACING) == Direction.EAST) {
         	SHAPE = VoxelShapes.box(0.875, 0, 0, 1, 1, 1);
         }
@@ -78,57 +129,10 @@ public class CalendarBlock2 extends Block {
         }
         
         return SHAPE;
-    }
-*/
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-    	
-        return new CalendarBlock2Tile();
-    }
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-    	int boop;
-    	switch(context.getHorizontalDirection()) {
-    	case NORTH:
-    		boop = 0;
-    		break;
-    	case SOUTH:
-    		boop = 8;
-    		break;
-    	case WEST:
-    		boop = 12;
-    		break;
-    	case EAST:
-    		boop = 4;
-    		break;
-		default:
-			boop = 0;
-    	}
-         return defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection()).setValue(BlockStateProperties.ROTATION_16, boop);
-         }
-    @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING);
-        builder.add(BlockStateProperties.ROTATION_16);
-    }
-    @Override
-    public int getHarvestLevel(BlockState state) {
-      return 1; //TODO: RE-Evaluate
-    }
-    @Override
-    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return SHAPE;
-    }
+    }/*
     @Override
     public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.INVISIBLE;
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
-    
+    */
 }

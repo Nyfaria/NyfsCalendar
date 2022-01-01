@@ -56,6 +56,7 @@ public class ClientSetup {
 
         event.addSprite(CalendarBlock2Renderer.CALENDARBLOCK2_TEXTURE);
         event.addSprite(CalendarBlock2Renderer.BLACKWOOL);
+        event.addSprite(CalendarBlock2Renderer.INDICATOR);
     }
 
     @SubscribeEvent
